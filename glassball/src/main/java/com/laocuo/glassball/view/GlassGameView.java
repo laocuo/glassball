@@ -23,6 +23,7 @@ public class GlassGameView extends ViewGroup {
 
     private int mBrickCount = 0;
     private final int BALL_MOVE_SETP_MIN = 6, BALL_MOVE_SETP_MAX = 30;
+    private final int BALL_RADIUS = 50, BOARD_W = 400, BOARD_H = 70, BRICK_w = 180, BRICK_H = 180;
     private int ball_move_step = BALL_MOVE_SETP_MIN;
     private boolean bUpdateBall = false;
     private boolean bFirstRun = true;
@@ -31,11 +32,11 @@ public class GlassGameView extends ViewGroup {
     private BoardView mBoardView;
     private Center mBallCenter, mBoardCenter;
     private int mBallCenterXDir = ball_move_step, mBallCenterYDir = -1*ball_move_step;
-    private int mBallR = 50;
-    private int mBoardW = 400, mBoardH = 70;
-    private int mBrickW = 200, mBrickH = 200;
+    private int mBallR = BALL_RADIUS;
+    private int mBoardW = BOARD_W, mBoardH = BOARD_H;
+    private int mBrickW = BRICK_w, mBrickH = BRICK_H;
     private HashMap<Integer, BrickView> mBrickMap = new HashMap<>();
-    private Handler mHandler;
+//    private Handler mHandler;
     private Context mContext;
     private AttributeSet mAttributeSet;
     public GlassGameView(Context context, AttributeSet attrs) {
@@ -46,15 +47,20 @@ public class GlassGameView extends ViewGroup {
         post(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<20;i++) {
-                    addBrick();
-                }
+                addInitBricks();
             }
         });
     }
 
+    private void addInitBricks() {
+        mCenterBrickW = mBrickWGap - mBrickW/2;
+        mCenterBrickH = mBrickH/2;
+        for(int i=0;i<20;i++) {
+            addBrick();
+        }
+    }
+
     private void init(Context context, AttributeSet attrs) {
-        mHandler = new Handler();
         mBallView = new BallView(context, attrs);
         mBallView.setRaidus(mBallR);
         addView(mBallView);
@@ -115,7 +121,7 @@ public class GlassGameView extends ViewGroup {
         if (false == bUpdateBall) {
             bUpdateBall = true;
             reset();
-            mHandler.post(mUpdateBall);
+            post(mUpdateBall);
         }
     }
 
@@ -187,7 +193,7 @@ public class GlassGameView extends ViewGroup {
 
     private boolean updateBallCenter() {
         int step = ball_move_step;
-        L.d("step:"+step+" mBallCenterXDir:"+mBallCenterXDir+" mBallCenterYDir:"+mBallCenterYDir);
+//        L.d("step:"+step+" mBallCenterXDir:"+mBallCenterXDir+" mBallCenterYDir:"+mBallCenterYDir);
         mBallCenterXDir = step * mBallCenterXDir / Math.abs(mBallCenterXDir);
         mBallCenterYDir = step * mBallCenterYDir / Math.abs(mBallCenterYDir);
         int x = mBallCenter.x + mBallCenterXDir;
@@ -201,6 +207,10 @@ public class GlassGameView extends ViewGroup {
             if (Math.abs(mBallCenter.x - mBoardCenter.x) < (mBoardW/2 + mBallR)) {
                 mBallCenterYDir = -1*step;
                 ball_move_step = Math.min(ball_move_step+1,BALL_MOVE_SETP_MAX);
+                L.d("mBrickMap.size():"+mBrickMap.size());
+                if (mBrickMap.size() < 1) {
+                    addInitBricks();
+                }
             } else {
 //                reset();
                 return false;
@@ -210,7 +220,6 @@ public class GlassGameView extends ViewGroup {
         }
         x = mBallCenter.x + mBallCenterXDir;
         y = mBallCenter.y + mBallCenterYDir;
-        L.d("Center--x:"+x+" y:"+y);
         int isTouch = checkIfTouchBrick(new Center(x, y), step);
         if (isTouch <= 0) {
             mBallCenter.x += mBallCenterXDir;
@@ -289,6 +298,9 @@ public class GlassGameView extends ViewGroup {
             L.d("ret:"+ret);
             L.d("mBallCenter:"+mBallCenter.x+","+mBallCenter.y);
             L.d("------E------");
+            if (bv.isBlackSheep()) {
+                reduceBoardAndBallSize();
+            }
             removeView(bv);
             mBrickMap.remove(mMinIndex);
         }
@@ -298,6 +310,17 @@ public class GlassGameView extends ViewGroup {
         return ret;
     }
 
+    private void reduceBoardAndBallSize() {
+        if (mBoardW > BOARD_H*3) {
+            mBoardW -= 10;
+            mBoardView.setSize(mBoardW, mBoardH);
+        }
+        if (mBallR > BALL_RADIUS/2) {
+            mBallR -= 1;
+            mBallView.setRaidus(mBallR);
+        }
+    }
+
     private float calcDistance(Center p1, Center p2) {
         float x = p1.x - p2.x;
         float y = p1.y - p2.y;
@@ -305,6 +328,10 @@ public class GlassGameView extends ViewGroup {
     }
 
     private void reset() {
+        mBoardW = BOARD_W;
+        mBoardView.setSize(mBoardW, mBoardH);
+        mBallR = BALL_RADIUS;
+        mBallView.setRaidus(mBallR);
         mBallCenter.setXY(mScreenWidth / 2, mScreenHeight - mBoardH - mBallR);
         mBoardCenter.setXY(mScreenWidth / 2, mScreenHeight - mBoardH / 2);
         ball_move_step = BALL_MOVE_SETP_MIN;

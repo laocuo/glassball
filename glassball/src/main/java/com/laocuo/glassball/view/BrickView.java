@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.laocuo.glassball.utils.L;
+
 
 /**
  * Created by Laocuo on 2016/5/11.
@@ -18,6 +20,7 @@ public class BrickView extends View {
     private RectF mRect;
     private int mBrickIndex;
     private int mColor = Color.GRAY;
+    private boolean mBlackSheep;
 
     public GlassGameView.Center getmCenter() {
         return mCenter;
@@ -41,12 +44,21 @@ public class BrickView extends View {
         width = w;
         height = h;
         mRect = new RectF(0,0,width,height);
+        int r = (int) (Math.random() * 5);
+        if (r < 2) {
+            mBlackSheep = true;
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 //        canvas.drawRect(mRect, mPaint);
-        canvas.drawRoundRect(mRect, height/5, height/5, mPaint);
+        canvas.drawRoundRect(mRect, height/4, height/4, mPaint);
+        if (mBlackSheep) {
+            mPaint.setColor(Color.BLACK);
+            canvas.drawCircle(width/2, height/2, height/4, mPaint);
+            mPaint.setColor(mColor);
+        }
     }
 
     @Override
@@ -56,5 +68,9 @@ public class BrickView extends View {
 
     public void setCenter(GlassGameView.Center mC) {
         mCenter = mC;
+    }
+
+    public boolean isBlackSheep() {
+        return mBlackSheep;
     }
 }
