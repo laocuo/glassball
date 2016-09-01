@@ -1,22 +1,20 @@
 package com.laocuo.glassball;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
 import com.laocuo.glassball.fragment.GlassGameFragment;
 import com.laocuo.glassball.fragment.GlassMenuFragment;
 import com.laocuo.glassball.utils.L;
 
 
-public class GlassBallActivity extends Activity
+public class GlassBallActivity extends AppCompatActivity
         implements GlassMenuFragment.GlassMenuInterface, GlassGameFragment.GlassGameInterface{
     private Toolbar mToolbar;
     private FragmentManager fm;
@@ -49,7 +47,7 @@ public class GlassBallActivity extends Activity
 //        mToolbar.setNavigationIcon(R.drawable.logo);
 //        mToolbar.setLogo(R.drawable.logo);
         mToolbar.setTitle(R.string.app_name);
-        setActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
     }
 
     @Override
