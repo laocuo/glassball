@@ -1,5 +1,6 @@
 package com.laocuo.glassball.view;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.laocuo.glassball.utils.L;
 
@@ -26,6 +28,12 @@ public class BrickView extends View {
         return mCenter;
     }
 
+    public interface BrickDisappearListener{
+        void brickDisappear(BrickView bv, int index);
+    }
+
+    private BrickDisappearListener l;
+    private float mAlpha = 1.0f;
     private GlassGameView.Center mCenter;
     public int getBrickIndex() {
         return mBrickIndex;
@@ -72,5 +80,29 @@ public class BrickView extends View {
 
     public boolean isBlackSheep() {
         return mBlackSheep;
+    }
+
+    public void remove(final int mMinIndex) {
+        ValueAnimator ani = ValueAnimator.ofFloat(1.0f, 0);
+        ani.setDuration(500);
+        ani.setInterpolator(new LinearInterpolator());
+        ani.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mAlpha = (float) valueAnimator.getAnimatedValue();
+                if (mAlpha > 0) {
+                    BrickView.this.setAlpha(mAlpha);
+                } else {
+                    if (l != null) {
+                        l.brickDisappear(BrickView.this, mMinIndex);
+                    }
+                }
+            }
+        });
+        ani.start();
+    }
+
+    public void setBrickDisappearListener(BrickDisappearListener l) {
+        this.l = l;
     }
 }

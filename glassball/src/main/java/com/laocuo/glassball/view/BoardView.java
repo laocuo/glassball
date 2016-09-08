@@ -21,7 +21,7 @@ public class BoardView extends View {
         super(context, attrs);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(getResources().getColor(R.color.darkblack));
+        mPaint.setColor(getResources().getColor(R.color.darkgreen));
         mRect = new RectF(0,0,width,height);
     }
 
