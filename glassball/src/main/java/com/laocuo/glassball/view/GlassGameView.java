@@ -131,9 +131,7 @@ public class GlassGameView extends ViewGroup implements BrickView.BrickDisappear
     }
 
     @Override
-    public void brickDisappear(BrickView bv, int index) {
-        L.d("brickDisappear:"+index);
-        mBrickMap.remove(index);
+    public void brickDisappear(BrickView bv) {
         removeView(bv);
     }
 
@@ -317,7 +315,8 @@ public class GlassGameView extends ViewGroup implements BrickView.BrickDisappear
             if (bv.isBlackSheep()) {
                 reduceBoardAndBallSize();
             }
-            bv.remove(mMinIndex);
+            mBrickMap.remove(mMinIndex);
+            bv.remove();
         }
 
         mMinDistanceBetweenBallAndBrick = -1;

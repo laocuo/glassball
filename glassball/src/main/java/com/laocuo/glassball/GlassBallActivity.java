@@ -4,6 +4,7 @@ package com.laocuo.glassball;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -43,11 +44,9 @@ public class GlassBallActivity extends AppCompatActivity
     }
 
     private void initToolBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toobar);
-//        mToolbar.setNavigationIcon(R.drawable.logo);
-//        mToolbar.setLogo(R.drawable.logo);
-        mToolbar.setTitle(R.string.app_name);
-        setSupportActionBar(mToolbar);
+//        mToolbar = (Toolbar) findViewById(R.id.toobar);
+//        setSupportActionBar(mToolbar);
+//        ActionBar ab = getSupportActionBar();
     }
 
     @Override

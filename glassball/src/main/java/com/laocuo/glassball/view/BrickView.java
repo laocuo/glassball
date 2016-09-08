@@ -29,7 +29,7 @@ public class BrickView extends View {
     }
 
     public interface BrickDisappearListener{
-        void brickDisappear(BrickView bv, int index);
+        void brickDisappear(BrickView bv);
     }
 
     private BrickDisappearListener l;
@@ -82,7 +82,7 @@ public class BrickView extends View {
         return mBlackSheep;
     }
 
-    public void remove(final int mMinIndex) {
+    public void remove() {
         ValueAnimator ani = ValueAnimator.ofFloat(1.0f, 0);
         ani.setDuration(500);
         ani.setInterpolator(new LinearInterpolator());
@@ -94,7 +94,7 @@ public class BrickView extends View {
                     BrickView.this.setAlpha(mAlpha);
                 } else {
                     if (l != null) {
-                        l.brickDisappear(BrickView.this, mMinIndex);
+                        l.brickDisappear(BrickView.this);
                     }
                 }
             }
