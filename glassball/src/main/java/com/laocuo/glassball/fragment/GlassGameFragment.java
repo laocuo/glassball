@@ -1,6 +1,7 @@
 package com.laocuo.glassball.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -105,12 +106,12 @@ public class GlassGameFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (GlassGameInterface) activity;
+            mListener = (GlassGameInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -121,6 +122,12 @@ public class GlassGameFragment extends Fragment {
         mListener = null;
         mGlassGameView.stopUpdateBall();
     }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+    }
+
 
     public interface GlassGameInterface {
         // TODO: Update argument type and name

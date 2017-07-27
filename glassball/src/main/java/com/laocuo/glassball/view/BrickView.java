@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,11 +29,7 @@ public class BrickView extends View {
         return mCenter;
     }
 
-    public interface BrickDisappearListener{
-        void brickDisappear(BrickView bv);
-    }
-
-    private BrickDisappearListener l;
+    private ViewDisappearListener l;
     private float mAlpha = 1.0f;
     private GlassGameView.Center mCenter;
     public int getBrickIndex() {
@@ -92,9 +89,12 @@ public class BrickView extends View {
                 mAlpha = (float) valueAnimator.getAnimatedValue();
                 if (mAlpha > 0) {
                     BrickView.this.setAlpha(mAlpha);
+//                    BrickView.this.setScaleX(mAlpha);
+//                    BrickView.this.setScaleY(mAlpha);
                 } else {
                     if (l != null) {
-                        l.brickDisappear(BrickView.this);
+                        l.onViewDisappear(BrickView.this);
+                        l = null;
                     }
                 }
             }
@@ -102,7 +102,7 @@ public class BrickView extends View {
         ani.start();
     }
 
-    public void setBrickDisappearListener(BrickDisappearListener l) {
+    public void setDisappearListener(ViewDisappearListener l) {
         this.l = l;
     }
 }
